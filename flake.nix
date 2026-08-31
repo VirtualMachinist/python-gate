@@ -35,10 +35,11 @@
     let
       inherit (nixpkgs) lib;
 
+      # nixos-unstable (26.11+) dropped x86_64-darwin. Intel Macs: stay on
+      # `uv sync` (Level 1) or pin nixpkgs-26.05-darwin.
       systems = [
         "x86_64-linux"
         "aarch64-linux"
-        "x86_64-darwin"
         "aarch64-darwin"
       ];
       forAllSystems = lib.genAttrs systems;
