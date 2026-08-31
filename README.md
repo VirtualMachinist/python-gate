@@ -92,7 +92,7 @@ On NixOS, if you must run an **unpatched** FHS binary, set `NIX_LD` and `NIX_LD_
 
 A change is done when all of these pass:
 
-1. **Flake eval.** `nix flake show` lists `packages.<system>.default`, `devShells.<system>.default`, and `templates.default`.
+1. **Flake eval.** `nix flake show` lists `packages.<system>.default`, `devShells.<system>.default`, and `templates.default`. Systems: `x86_64-linux`, `aarch64-linux`, `aarch64-darwin` (nixos-unstable dropped Intel Macs).
 2. **Import inside the declared env.** `nix develop --command python -c "import python_gate, rich"` succeeds.
 3. **`uv sync --locked`.** The non-Nix inner loop still reproduces from `uv.lock`.
 4. **Same closure.** `nix run .#` and `nix develop` use the same Python set (same interpreter, same uv2nix overlay). The product is the wrapped application, not a hope.
