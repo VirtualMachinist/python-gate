@@ -1,0 +1,38 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  nix:
+    name: nix build + run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: DeterminateSystems/determinate-nix-action@v3
+      - name: Evaluate flake outputs
+        run: nix flake show --all-systems
+      - name: Build the closed world
+        run: nix build --print-build-logs
+      - name: Run the product (network-free)
+        run: nix run .#
+      - name: Import inside the declared env
+        run: |
+          nix develop --command python -c \
+            "import python_gate, rich; print(python_gate.greet())"
+
+  uv:
+    name: uv sync --locked
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+      - name: Sync from uv.lock (packages, not a closure)
+        run: uv sync --locked
+      - name: Run via the uv-managed env
+        run: uv run python-gate
