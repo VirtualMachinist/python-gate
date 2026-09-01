@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   nix:
-    name: nix build + run
+    name: nix build + check + run
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -19,6 +19,8 @@ jobs:
         run: nix flake show
       - name: Build the closed world
         run: nix build --print-build-logs
+      - name: Run flake checks
+        run: nix flake check --print-build-logs
       - name: Run the product (network-free)
         run: nix run .#
       - name: Import inside the declared env
